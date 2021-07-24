@@ -1,4 +1,4 @@
-package com.example.userservice.controller.jpa;
+package com.example.userservice.jpa;
 
 import lombok.AccessLevel;
 import lombok.Getter;

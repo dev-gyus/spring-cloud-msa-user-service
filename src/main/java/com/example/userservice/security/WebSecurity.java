@@ -1,8 +1,10 @@
 package com.example.userservice.security;
 
+import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,19 +16,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
+    private final Environment environment;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("user").password(passwordEncoder().encode("test1234")).roles("USER");
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .mvcMatchers("/users/**").permitAll();
+                .mvcMatchers("/**")
+                .hasIpAddress("192.168.0.6")
+                .and()
+                .addFilter(getAuthenticationFilter());
+//                .mvcMatchers("/users/**").permitAll();
 
-        http.formLogin();
 
         http.csrf().disable();
 
@@ -34,7 +43,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    public AuthenticationFilter getAuthenticationFilter() throws Exception {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService);
+        authenticationFilter.setAuthenticationManager(authenticationManager());
+        return authenticationFilter;
     }
 }

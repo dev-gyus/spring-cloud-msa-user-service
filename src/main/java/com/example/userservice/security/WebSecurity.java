@@ -44,7 +44,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService);
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(environment, userService);
         authenticationFilter.setAuthenticationManager(authenticationManager());
         return authenticationFilter;
     }

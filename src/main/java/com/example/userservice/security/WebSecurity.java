@@ -30,6 +30,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .mvcMatchers("/actuator/**").permitAll()
                 .mvcMatchers("/**")
                 .hasIpAddress("192.168.0.6")
                 .and()

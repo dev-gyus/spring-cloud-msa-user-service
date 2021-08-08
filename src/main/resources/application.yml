@@ -2,6 +2,11 @@ server:
   port: 0
 
 spring:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672  # Web브라우저로 접근하면 15672포트지만 메세지큐는 5672포트로 접근해야함
+    username: guest
+    password: guest
   h2:
     console:
       enable: true
@@ -28,7 +33,13 @@ eureka:
 
 greeting:
   message: Welcome to the simple E-Commerce.
-#
-token:
-  expiration_time: 86400000
-  secret: user_token
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh
+
+#token:
+#  expiration_time: 86400000
+#  secret: user_token

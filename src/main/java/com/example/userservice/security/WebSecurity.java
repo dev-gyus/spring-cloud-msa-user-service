@@ -32,7 +32,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers("/actuator/**").permitAll()
                 .mvcMatchers("/**")
-                .hasIpAddress("192.168.0.6")
+                .hasIpAddress("192.168.0.7")
                 .and()
                 .addFilter(getAuthenticationFilter());
 //                .mvcMatchers("/users/**").permitAll();
